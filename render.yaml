@@ -22,6 +22,10 @@ services:
         fromDatabase:
           name: event-media-db
           property: connectionString
+      - key: DIRECT_URL
+        fromDatabase:
+          name: event-media-db
+          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
