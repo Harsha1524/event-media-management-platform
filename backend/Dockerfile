@@ -32,4 +32,4 @@ RUN npx prisma generate
 EXPOSE 8080
 
 # Run DB migrations then start the server (NO nodemon in production)
-CMD ["sh", "-c", "npx prisma migrate deploy && node src/app.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node prisma/seed.js && node src/app.js"]
