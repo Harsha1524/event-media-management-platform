@@ -11,7 +11,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Create upload directories
-const dirs = ['uploads', 'uploads/avatars', 'uploads/thumbnails', 'uploads/selfies', 'logs'];
+const dirs = ['uploads', 'uploads/media', 'uploads/covers', 'uploads/avatars', 'uploads/thumbnails', 'uploads/selfies', 'logs'];
 dirs.forEach(dir => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });

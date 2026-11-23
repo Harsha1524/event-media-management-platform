@@ -26,8 +26,8 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// S3 Storage
-const s3Storage = multerS3({
+// S3 Storage (only built when S3 is enabled; multer-s3 throws without a bucket)
+const s3Storage = USE_S3 ? multerS3({
   s3: s3Client,
   bucket: process.env.AWS_S3_BUCKET,
   contentType: multerS3.AUTO_CONTENT_TYPE,
@@ -39,7 +39,7 @@ const s3Storage = multerS3({
     const key = `media/${req.user?.id || 'anonymous'}/${uuidv4()}${ext}`;
     cb(null, key);
   },
-});
+}) : null;
 
 // Local storage for general media
 const localMediaStorage = multer.diskStorage({

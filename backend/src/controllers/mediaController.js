@@ -35,7 +35,7 @@ const uploadMedia = async (req, res) => {
       const isImage = file.mimetype.startsWith('image/');
       const isVideo = file.mimetype.startsWith('video/');
 
-      let fileUrl = file.location || `${process.env.BACKEND_URL}/uploads/${file.filename}`;
+      let fileUrl = file.location || `${process.env.BACKEND_URL}/uploads/media/${file.filename}`;
       let thumbnailUrl = null;
       let tags = [];
       let width, height;
