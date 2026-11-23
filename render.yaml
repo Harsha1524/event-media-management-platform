@@ -1,0 +1,55 @@
+# Render Blueprint: Postgres + Express API (Docker) + Next.js frontend.
+# Deploy: Render dashboard -> New -> Blueprint -> pick this repo.
+# If Render gives a service a different URL than the ones below (name taken),
+# update FRONTEND_URL / BACKEND_URL / NEXT_PUBLIC_* to match and redeploy.
+
+databases:
+  - name: event-media-db
+    plan: free
+    databaseName: eventmedia
+    user: eventmedia
+
+services:
+  - type: web
+    name: event-media-api-harsha
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: sh -c "npx prisma migrate deploy && node prisma/seed.js && node src/app.js"
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: event-media-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://event-media-web-harsha.onrender.com
+      - key: BACKEND_URL
+        value: https://event-media-api-harsha.onrender.com
+      - key: USE_S3
+        value: "false"
+      # Optional: add AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY,
+      # AWS_S3_BUCKET, REKOGNITION_COLLECTION_ID and set USE_S3=true to enable
+      # S3 storage and face recognition.
+
+  - type: web
+    name: event-media-web-harsha
+    runtime: node
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_API_URL
+        value: https://event-media-api-harsha.onrender.com/api
+      - key: NEXT_PUBLIC_SOCKET_URL
+        value: https://event-media-api-harsha.onrender.com
